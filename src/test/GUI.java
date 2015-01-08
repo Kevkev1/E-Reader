@@ -274,10 +274,20 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//Show FAQ
 			}
-        	
+        });
+        
+        JMenuItem menuWordCount = new JMenuItem("Word count");
+        menuWordCount.setToolTipText("Get the current page's number of words");
+        menuWordCount.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		int words = textPane.getText().split(" ").length;
+        		JOptionPane.showMessageDialog(null, "The number of words on this page is: " + words + ".");
+        	}
         });
         
         help.add(menuFAQ);
+        help.add(menuWordCount);
         
         menubar.add(file);
         menubar.add(nav);

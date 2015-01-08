@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,9 +27,8 @@ public class ReadEpub {
 	private ArrayList<String> lines = null;
 	private int pageNumber = 0;
 	private int paraGraph = 0;
-	private int lastParagraph = 0;
 	private static final String SAVED_PAGES_FILE_PATH = "res/savedPages.sav";
-	private static final int MAX_NUM_WORDS = 50;
+	private static final int MAX_NUM_WORDS = 100;
 
 	/**
 	 * The constructor for this class.
@@ -61,7 +59,7 @@ public class ReadEpub {
 			tmp.removeAll(Arrays.asList("", null, "\n"));
 			for (Iterator<String> it = tmp.iterator(); it.hasNext();) {
 				String line = it.next();
-				if (line.matches("(\\s\\s*)") || line.matches("\\s")) {
+				if (line.matches("(\\s\\s)") || line.matches("\\s") || line.matches("\\s\\s\\s\\s\\n")) {
 					it.remove();
 				}
 			}
@@ -141,32 +139,6 @@ public class ReadEpub {
 			paraGraph = lines.size() - 1;
 		}
 		return lines.get(paraGraph).replaceAll("(<[^p][^<>]*>)", "");
-	}
-
-	/**
-	 * Reloads the <code>lines</code> variable to store the text of an other
-	 * file.
-	 */
-	private void reloadFile() {
-		try {
-			List<Resource> conts = book.getContents();
-			String page;
-			page = new String(conts.get(pageNumber).getData(), "UTF-8");
-			page = page.replace("&mdash;", "-");
-			page = page.replace("&nbsp;", "");
-			page = page.replaceAll("(<[^p][^<>]*>)", "");
-			String[] temp = page.split("(<p[^<>]*>)");
-			lines = new ArrayList<String>(Arrays.asList(temp));
-			lines.removeAll(Arrays.asList("", null, "\n"));
-			for (Iterator<String> it = lines.iterator(); it.hasNext();) {
-				String line = it.next();
-				if (line.matches("(\\s\\s+)") || line.matches("\\s")) {
-					it.remove();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
